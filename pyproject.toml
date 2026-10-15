@@ -89,6 +89,9 @@ include-package-data = true
 readme = { file = "README.rst" }
 version = { file = "VERSION" }
 
+[tool.setuptools.package-data]
+"tsgettoolbox_wdfn.wdfn_function_keywords" = ["*.json"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 exclude = ["tests"]
