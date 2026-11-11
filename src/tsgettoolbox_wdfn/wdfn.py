@@ -232,6 +232,8 @@ def wdfn(db_name, **kwargs):
             f"Invalid ts_return_style: {ts_return_style}.  Must be 'compact' or 'full'."
         )
 
+    kwargs = {key: value for key, value in kwargs.items() if value is not None}
+
     monitoring_location_ids = [""]
     if ("monitoring_location_id" in kwargs) or ("monitoring_location_number" in kwargs):
         """Convert monitoring_location_number entries to monitoring_location_id."""
@@ -251,7 +253,11 @@ def wdfn(db_name, **kwargs):
 
     periods = [""]
     if db_name in _time_delta:
-        input_start, input_end = kwargs["time"].split("/")
+        if "time" not in kwargs:
+            input_start = ".."
+            input_end = ".."
+        else:
+            input_start, input_end = kwargs["time"].split("/")
         input_start = (
             None
             if input_start == ".."
@@ -503,7 +509,7 @@ def wdfn(db_name, **kwargs):
         collect = collect.set_index("id")
     elif dtindex:
         collect.index.name = dtindex
-    collect = collect.apply(pd.to_numeric, errors="ignore")
+    collect = collect.apply(pd.to_numeric, errors="coerce")
     return collect
 
 
